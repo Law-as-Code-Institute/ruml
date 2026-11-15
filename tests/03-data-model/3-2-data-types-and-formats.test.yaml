@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "3.2 Data Types and Formats"
+description: "The `DateTime` format."
+tests:
+  - name: "datetime-without-offset"
+    kind: "validation"
+    spec: ["3.2"]
+    description:
+      "`metadata.created` has no UTC offset, but a `DateTime` MUST end in `Z` or `±hh:mm`."
+    ruml: "3-2-data-types-and-formats.fixtures/reject-datetime-without-offset.ruml"
+    layer: "schema"
+    expect: "reject"
+    at: ["/metadata/created"]

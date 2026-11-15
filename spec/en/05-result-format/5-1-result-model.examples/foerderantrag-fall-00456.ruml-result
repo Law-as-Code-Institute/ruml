@@ -1,0 +1,103 @@
+{
+  "$format": "RUML-Result",
+  "$specVersion": "1.0",
+  "rumlReference": {
+    "id": "ec36948d-fbb2-4815-985a-bd5e9375d934",
+    "hash": "sha3-256:4e03657aea45a94fc7d9c7e5c89e3f5a2b7c4d8e9f0a1b2c3d4e5f6a7b8c9d0e"
+  },
+  "evaluation": {
+    "id": "7f3d1c88-2b4e-4a19-9c5d-0e6f1a2b3c4d",
+    "timestamp": "2024-01-15T10:00:00Z",
+    "mode": "optimized",
+    "caseId": "Antrag-2024-00456",
+    "capabilities": [
+      {
+        "id": "ruml:datapoints"
+      },
+      {
+        "id": "ruml:query"
+      },
+      {
+        "id": "ruml:actions"
+      }
+    ],
+    "results": {
+      "1": {
+        "lexId": "1",
+        "status": "true",
+        "evaluatedAt": "2024-01-15T10:00:04Z",
+        "reason": "Alle Voraussetzungen erfüllt (AND: alle Kinder true)"
+      },
+      "1.1": {
+        "lexId": "2",
+        "status": "true",
+        "evaluatedAt": "2024-01-15T10:00:01Z",
+        "reason": "Alter 25 >= 18",
+        "capabilities": [
+          {
+            "id": "ruml:query",
+            "payload": {
+              "expression": "dp_age >= 18",
+              "inputs": {
+                "dp_age": 25
+              },
+              "result": "true"
+            }
+          }
+        ]
+      },
+      "1.2": {
+        "lexId": "3",
+        "status": "true",
+        "evaluatedAt": "2024-01-15T10:00:02Z",
+        "reason": "XOR erfüllt: Einkommen unter Grenze"
+      },
+      "1.2.1": {
+        "lexId": "4",
+        "status": "true",
+        "evaluatedAt": "2024-01-15T10:00:02Z",
+        "reason": "Einkommen 35000 <= 40000",
+        "capabilities": [
+          {
+            "id": "ruml:query",
+            "payload": {
+              "expression": "dp_income <= 40000",
+              "inputs": {
+                "dp_income": 35000
+              },
+              "result": "true"
+            }
+          }
+        ]
+      },
+      "1.2.2": {
+        "lexId": "5",
+        "status": "ignored",
+        "reason": {
+          "type": "shortCircuit",
+          "trigger": "Knoten 1.2.1 (lexId: 4) wurde true",
+          "operator": "XOR",
+          "mode": "optimized"
+        }
+      },
+      "1.3": {
+        "lexId": "6",
+        "status": "true",
+        "evaluatedAt": "2024-01-15T10:00:03Z",
+        "reason": "Wohnsitz BY == BY",
+        "capabilities": [
+          {
+            "id": "ruml:query",
+            "payload": {
+              "expression": "dp_state = \"BY\"",
+              "inputs": {
+                "dp_state": "BY"
+              },
+              "result": "true"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

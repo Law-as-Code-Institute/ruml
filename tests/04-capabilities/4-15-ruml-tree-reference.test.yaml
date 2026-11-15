@@ -1,0 +1,102 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../../schema/spec-test.schema.json
+title: "4.15 ruml:tree-reference"
+description:
+  "Nodes that reference nodes, and with them the subtrees below, of other RUML files with typed
+  references."
+tests:
+  - name: "represents-and-refers-to"
+    kind: "validation"
+    spec: ["4.15"]
+    description:
+      "A rulemap declares `ruml:tree-reference` without payload; a node represents one node of a law
+      rulemap and refers to two more, each with a node anchor `<ruml-version-uri>#node/<id>`."
+    ruml: "4-15-ruml-tree-reference.fixtures/accept-represents-and-refers-to.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "root-payload"
+    kind: "validation"
+    spec: ["4.15"]
+    description: "The root-level declaration of `ruml:tree-reference` has a payload."
+    ruml: "4-15-ruml-tree-reference.fixtures/reject-root-payload.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-01"]
+    at: ["/capabilities/0"]
+
+  - name: "empty-tree-reference"
+    kind: "validation"
+    spec: ["4.15"]
+    description: "A node has `ruml:tree-reference` with an empty payload."
+    ruml: "4-15-ruml-tree-reference.fixtures/reject-empty-tree-reference.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-01"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload"]
+
+  - name: "empty-refers-to"
+    kind: "validation"
+    spec: ["4.15"]
+    description: "A node's `refersTo` is an empty array."
+    ruml: "4-15-ruml-tree-reference.fixtures/reject-empty-refers-to.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-01"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/refersTo"]
+
+  - name: "includes-field"
+    kind: "validation"
+    spec: ["4.15", "4.16"]
+    description:
+      "The payload has an `includes` field; a node that evaluates another file's subtree uses
+      `ruml:tree-include` instead."
+    ruml: "4-15-ruml-tree-reference.fixtures/reject-includes-field.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-01"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/includes"]
+
+  - name: "represents-array"
+    kind: "validation"
+    spec: ["4.15"]
+    description: "`represents` is an array of two references; a node represents at most one node."
+    ruml: "4-15-ruml-tree-reference.fixtures/reject-represents-array.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-01"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/represents"]
+
+  - name: "same-document-node-reference"
+    kind: "validation"
+    spec: ["4.15"]
+    description:
+      "`refersTo` contains a same-document anchor (`#node/…`); reuse within one file is what modular
+      nodes are for."
+    ruml: "4-15-ruml-tree-reference.fixtures/reject-same-document-node-reference.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-02"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/refersTo/0/uri"]
+
+  - name: "text-path-instead-of-node"
+    kind: "validation"
+    spec: ["4.15"]
+    description:
+      "`represents` points at a text element (`#ruml:text-reference/…`) instead of a node."
+    ruml: "4-15-ruml-tree-reference.fixtures/reject-text-path-instead-of-node.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-02"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/represents/uri"]
+
+  - name: "duplicate-ref"
+    kind: "validation"
+    spec: ["4.15"]
+    description: "`refersTo` contains the same `uri` twice."
+    ruml: "4-15-ruml-tree-reference.fixtures/reject-duplicate-ref.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-03"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/refersTo"]

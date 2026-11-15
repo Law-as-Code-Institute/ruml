@@ -1,0 +1,573 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../../schema/spec-test.schema.json
+title: "3.6 Operators (NOT_AND)"
+description:
+  "NOT_AND aggregation over its direct children. Leaf statuses come from `ruml:query` over the input
+  datapoints: `yes` is `true`, `no` is `false`, `unknown` is `undefined`."
+tests:
+  - name: "operator-not-and--optimized--yes-yes-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description: "All three children are `true`, so the NOT_AND root is `false`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "yes"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "false"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "true"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--yes-yes-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "Inputs yes/yes/yes in `complete` mode: every child is evaluated and the NOT_AND root is
+      `false`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "yes"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "false"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "true"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--no-no-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description: "Inputs no/no/no in `optimized` mode: the NOT_AND root is `true`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "no"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "ignored"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "ignored"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--no-no-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "Inputs no/no/no in `complete` mode: the NOT_AND root is `true`. Unlike in `optimized` mode,
+      the children after the first `false` one are evaluated too and receive their own status, not
+      `ignored`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "no"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "false"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "false"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--yes-yes-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description: "One child is `false`, so the NOT_AND root is `true`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "yes"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "false"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--yes-yes-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "Inputs yes/yes/no in `complete` mode: every child is evaluated and the NOT_AND root is
+      `true`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "yes"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "false"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--no-no-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description: "Inputs no/no/yes in `optimized` mode: the NOT_AND root is `true`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "no"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "ignored"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "ignored"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--no-no-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "Inputs no/no/yes in `complete` mode: the NOT_AND root is `true`. Unlike in `optimized` mode,
+      the children after the first `false` one are evaluated too and receive their own status, not
+      `ignored`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "no"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "false"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "true"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--yes-yes-unknown"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description: "One child is `undefined` (the others `true`), so the NOT_AND root is `undefined`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "yes"
+      dp_answer_3: "unknown"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "undefined"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "undefined"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--yes-yes-unknown"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "Inputs yes/yes/unknown in `complete` mode: every child is evaluated and the NOT_AND root is
+      `undefined`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "yes"
+      dp_answer_3: "unknown"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "undefined"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "undefined"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--no-unknown-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description: "Inputs no/unknown/no in `optimized` mode: the NOT_AND root is `true`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "unknown"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "ignored"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "ignored"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--no-unknown-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "Inputs no/unknown/no in `complete` mode: the NOT_AND root is `true`. Unlike in `optimized`
+      mode, the children after the first `false` one are evaluated too and receive their own status,
+      not `ignored`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "unknown"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "undefined"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "false"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--no-unknown-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description: "Inputs no/unknown/yes in `optimized` mode: the NOT_AND root is `true`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "unknown"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "ignored"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "ignored"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--no-unknown-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "Inputs no/unknown/yes in `complete` mode: the NOT_AND root is `true`. Unlike in `optimized`
+      mode, the children after the first `false` one are evaluated too and receive their own status,
+      not `ignored`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "unknown"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "undefined"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "true"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--no-yes-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "NOT_AND stops at the first false child in `optimized` mode. The later children are never
+      evaluated and receive status `ignored` — their input values go unused, which is not an error."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "yes"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "ignored"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "ignored"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--no-yes-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "Inputs no/yes/yes in `complete` mode: the NOT_AND root is `true`. Unlike in `optimized` mode,
+      the children after the first `false` one are evaluated too and receive their own status, not
+      `ignored`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "yes"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "true"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--yes-no-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description: "Inputs yes/no/no in `optimized` mode: the NOT_AND root is `true`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "no"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "false"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "ignored"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--yes-no-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "Inputs yes/no/no in `complete` mode: the NOT_AND root is `true`. Unlike in `optimized` mode,
+      the children after the first `false` one are evaluated too and receive their own status, not
+      `ignored`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "no"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "false"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "false"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--yes-unknown-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "The second child is `undefined` before any child is `false`, so the NOT_AND root is
+      `undefined`. In `optimized` mode NOT_AND stops at the first `undefined` child; the later
+      children receive status `ignored`. A later `false` child does not change the result."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "unknown"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "undefined"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "undefined"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "ignored"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--yes-unknown-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "In `complete` mode every child is evaluated. The third child is `false`, which takes
+      precedence over the `undefined` second child, so the NOT_AND root is `true`. In `optimized`
+      mode the evaluation stops at the `undefined` child and the root is `undefined`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "unknown"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "undefined"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "false"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--optimized--unknown-no-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "The first child is `undefined`, so the NOT_AND root is `undefined`. In `optimized` mode
+      NOT_AND stops at the first `undefined` child; the later children receive status `ignored`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "unknown"
+      dp_answer_2: "no"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "undefined"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "undefined"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "ignored"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "ignored"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-not-and--complete--unknown-no-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "In `complete` mode every child is evaluated. The second child is `false`, which takes
+      precedence over the `undefined` first child, so the NOT_AND root is `true`. In `optimized`
+      mode the evaluation stops at the `undefined` child and the root is `undefined`."
+    ruml: "3-6-operators.fixtures/evaluation-not-and-three-queried-children.ruml"
+    run:
+      mode: "complete"
+    inputs:
+      dp_answer_1: "unknown"
+      dp_answer_2: "no"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "undefined"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "false"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "true"
+        comment: "Third child ('dp_answer_3')"

@@ -1,0 +1,40 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:expression",
+      "required": true
+    }
+  ],
+  "metadata": {
+    "id": "ec36948d-fbb2-4815-985a-bd5e9375d934",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "0eb360a6-626a-406d-89a1-9f434ced141b",
+        "operator": "DELEGATED",
+        "label": "Ausdruck ohne Prosa",
+        "children": ["2"],
+        "capabilities": [
+          {
+            "id": "ruml:expression",
+            "payload": {
+              "expression": "$count($children[status = 'true']) >= 1"
+            }
+          }
+        ]
+      },
+      "2": {
+        "id": "1a5b7c3d-2e4f-4a6b-8c9d-0e1f2a3b4c5d",
+        "label": "Merkmal 1"
+      }
+    }
+  }
+}

@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruml.org/schemas/spec-test/0.1/schema.json",
+  "title": "RUML spec-test descriptor",
+  "description": "Descriptor for one or more language-agnostic RUML conformance tests. See spec-tests/README.md for the runner contract.",
+  "type": "object",
+  "required": ["title", "tests"],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Equals the title of the section page this descriptor sits next to (e.g. \"3.6 Operators\"). A descriptor named <page>--<suffix>.test.yaml adds a qualifier in parentheses (e.g. \"3.6 Operators (AND)\")."
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional prose about what this group of tests establishes."
+    },
+    "tests": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The tests in this file. Names must be unique within the file.",
+      "items": {
+        "$ref": "#/$defs/Test"
+      }
+    }
+  },
+  "$defs": {
+    "Test": {
+      "type": "object",
+      "required": ["name", "kind"],
+      "oneOf": [
+        {
+          "$ref": "#/$defs/EvaluationTest"
+        },
+        {
+          "$ref": "#/$defs/ValidationTest"
+        }
+      ]
+    },
+    "EvaluationTest": {
+      "type": "object",
+      "required": ["name", "kind", "description", "ruml", "run", "inputs", "assertions"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/TestName"
+        },
+        "kind": {
+          "const": "evaluation"
+        },
+        "spec": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Spec sections this covers, one per entry — a bare section number (\"3.6\", \"6.1\"), nothing else. Rule ids belong in rules/covers/warnings, not here. A section number resolves to a title and a link into the specification. Narrows the file-level tag for this test.",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]+(\\.[0-9]+)*$"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "ruml": {
+          "$ref": "#/$defs/RelativePath",
+          "description": "Input RUML document, relative to this descriptor."
+        },
+        "run": {
+          "$ref": "#/$defs/RunConfig"
+        },
+        "inputs": {
+          "type": "object",
+          "description": "Data Points provided to the evaluator.",
+          "additionalProperties": true
+        },
+        "assertions": {
+          "type": "array",
+          "description": "A number of jsonata queries (applied to the ruml-result) and expected values that must all match.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "A jsonata query applied to the ruml-result."
+              },
+              "expectedValue": {
+                "type": ["string", "number", "boolean", "null", "object", "array"],
+                "description": "The expected result of the 'query' applied to the ruml-result"
+              },
+              "comment": {
+                "type": "string",
+                "description": "An optional description of what the query is checking in the result."
+              }
+            }
+          }
+        }
+      }
+    },
+    "ValidationTest": {
+      "type": "object",
+      "required": ["name", "kind", "description", "ruml", "layer", "expect"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/TestName"
+        },
+        "kind": {
+          "const": "validation"
+        },
+        "spec": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Spec sections this covers, one per entry — a bare section number (\"3.6\", \"6.1\"), nothing else. Rule ids belong in rules/covers/warnings, not here. A section number resolves to a title and a link into the specification. Narrows the file-level tag for this test.",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]+(\\.[0-9]+)*$"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "ruml": {
+          "$ref": "#/$defs/RelativePath",
+          "description": "Document to validate, relative to this descriptor."
+        },
+        "layer": {
+          "enum": ["schema", "semantic"],
+          "description": "schema: decidable by validating against ruml.schema.json. semantic: everything else (referential integrity, uniqueness, cross-field rules). A runner that does not implement a layer skips those cases."
+        },
+        "expect": {
+          "enum": ["accept", "reject"]
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Rule ids from RULES.md that MUST be reported when expect == 'reject'. Can also be provided as information for tests with expect == 'accept'.",
+          "items": {
+            "$ref": "#/$defs/RuleId"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Rule ids a parser SHOULD report as a warning for this document, rather than as a finding that decides accept/reject. Independent of `expect`: a rejected document may also warrant warnings. Informational — a runner does not assert these, because whether and how warnings reach a caller (log, side channel, structured result) is an implementation detail the suite deliberately leaves open.",
+          "items": {
+            "$ref": "#/$defs/RuleId"
+          }
+        },
+        "at": {
+          "type": "array",
+          "description": "Optional JSON Pointers to every offending location this case expects a validator to report, for human readers. A validator that reports additional locations beyond these is not penalised — this is a floor, not a ceiling. Empty for a case with no JSON structure to point into (e.g. the input isn't valid JSON at all).",
+          "items": {
+            "type": "string",
+            "pattern": "^(/[^/]*)*$"
+          }
+        }
+      }
+    },
+    "RunConfig": {
+      "type": "object",
+      "required": ["mode"],
+      "additionalProperties": false,
+      "description": "The only configurable part of a run. Everything else about execution and comparison is a fixed convention documented in README.md.",
+      "properties": {
+        "evaluationId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+          "description": "Optional. UUID the implementation must use for evaluation.id. Only needed when an assertion checks evaluation.id."
+        },
+        "frozenClock": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Optional. Instant the clock is pinned to; only needed when an assertion checks a timestamp. Must be quoted; an unquoted ISO timestamp is a YAML date, not a string."
+        },
+        "mode": {
+          "enum": ["optimized", "complete"]
+        }
+      }
+    },
+    "LeafInput": {
+      "type": "object",
+      "required": ["lexId", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "lexId": {
+          "$ref": "#/$defs/LexId",
+          "description": "The lexId the node at this path must have. An assertion, not an input: the runner fails on mismatch, which is what catches a mistyped result path."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["true", "false", "undefined", "ignored"],
+          "description": "Quote the value. `true` and `false` unquoted are YAML booleans and will fail validation here."
+        },
+        "reason": {
+          "type": "string"
+        },
+        "capabilities": {
+          "type": "object",
+          "description": "Node capability results, currently the ruml:query shape.",
+          "propertyNames": {
+            "pattern": "^ruml:query$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/QueryResult"
+          }
+        }
+      }
+    },
+    "QueryResult": {
+      "type": "object",
+      "required": ["expression", "inputs", "result"],
+      "additionalProperties": false,
+      "properties": {
+        "expression": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inputs": {
+          "type": "object"
+        },
+        "result": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TestName": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Unique within the descriptor. Lower-case kebab-case, so it is usable as a test id."
+    },
+    "RelativePath": {
+      "type": "string",
+      "pattern": "^[^/][^\\\\]*$",
+      "description": "Path relative to the descriptor's directory. Must not be absolute."
+    },
+    "NodePath": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*(\\.[1-9][0-9]*)*$"
+    },
+    "LexId": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "RuleId": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9-]*$",
+      "description": "An id defined in RULES.md, e.g. P-05, D-04, META-MODIFIED-AFTER-CREATED."
+    }
+  }
+}

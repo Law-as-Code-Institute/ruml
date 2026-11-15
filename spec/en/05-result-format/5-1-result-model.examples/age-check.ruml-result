@@ -1,0 +1,57 @@
+{
+  "$format": "RUML-Result",
+  "$specVersion": "1.0",
+  "rumlReference": {
+    "id": "a8990415-0348-4966-b31b-68a20d28ee45"
+  },
+  "evaluation": {
+    "id": "35e294f9-69e7-46d1-b3d0-d10ca22b0290",
+    "timestamp": "2024-01-15T10:00:02Z",
+    "mode": "complete",
+    "capabilities": [
+      {
+        "id": "ruml:datapoints"
+      },
+      {
+        "id": "ruml:query"
+      },
+      {
+        "id": "ruml:actions"
+      }
+    ],
+    "results": {
+      "1": {
+        "lexId": "1",
+        "status": "true",
+        "evaluatedAt": "2024-01-15T10:00:01Z",
+        "reason": "Alle Voraussetzungen erfüllt",
+        "capabilities": [
+          {
+            "id": "ruml:query",
+            "payload": {
+              "expression": "dp_age >= 18",
+              "inputs": {
+                "dp_age": 25
+              },
+              "result": "true"
+            }
+          },
+          {
+            "id": "ruml:actions",
+            "payload": {
+              "triggered": [
+                {
+                  "id": "notify-approval",
+                  "trigger": "onTrue",
+                  "operation": "sendNotification",
+                  "timestamp": "2024-01-15T10:00:02Z",
+                  "status": "success"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

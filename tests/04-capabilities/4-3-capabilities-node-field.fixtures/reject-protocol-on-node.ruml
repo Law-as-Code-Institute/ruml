@@ -1,0 +1,31 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:protocol"
+    }
+  ],
+  "metadata": {
+    "id": "1596a7f6-885b-44b4-a50e-ad3b10356583",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "ec36948d-fbb2-4815-985a-bd5e9375d934",
+        "label": "Anspruch auf Schadensersatz",
+        "capabilities": [
+          {
+            "id": "ruml:protocol",
+            "payload": {}
+          }
+        ]
+      }
+    }
+  }
+}

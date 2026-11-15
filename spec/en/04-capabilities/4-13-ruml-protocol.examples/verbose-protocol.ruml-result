@@ -1,0 +1,88 @@
+{
+  "$format": "RUML-Result",
+  "$specVersion": "1.0",
+  "rumlReference": {
+    "id": "ec36948d-fbb2-4815-985a-bd5e9375d934"
+  },
+  "evaluation": {
+    "id": "d8129e0c-cf2e-4ef9-b7b6-fa8b206d5517",
+    "timestamp": "2024-01-15T10:00:05Z",
+    "mode": "complete",
+    "results": {
+      "1": {
+        "lexId": "1",
+        "status": "true",
+        "reason": "Child 1.1 is true"
+      },
+      "1.1": {
+        "lexId": "2",
+        "status": "true",
+        "reason": "ruml:query yields true for dp_annual_income 50000"
+      }
+    },
+    "capabilities": [
+      {
+        "id": "ruml:protocol",
+        "payload": {
+          "level": "verbose",
+          "events": [
+            {
+              "specversion": "1.0",
+              "id": "0001",
+              "source": "https://engines.example.com/rms-engine/2.3.1",
+              "type": "ruml.evaluation.started",
+              "time": "2024-01-15T10:00:00Z",
+              "data": {
+                "mode": "complete"
+              }
+            },
+            {
+              "specversion": "1.0",
+              "id": "0002",
+              "source": "https://engines.example.com/rms-engine/2.3.1",
+              "type": "ruml.datapoint.resolved",
+              "time": "2024-01-15T10:00:01Z",
+              "subject": "dp_annual_income",
+              "data": {
+                "binding": "input",
+                "value": 50000
+              }
+            },
+            {
+              "specversion": "1.0",
+              "id": "0003",
+              "source": "https://engines.example.com/rms-engine/2.3.1",
+              "type": "ruml.node.evaluated",
+              "time": "2024-01-15T10:00:02Z",
+              "subject": "1.1",
+              "data": {
+                "lexId": "2",
+                "status": "true",
+                "capability": "ruml:query"
+              }
+            },
+            {
+              "specversion": "1.0",
+              "id": "0004",
+              "source": "https://engines.example.com/rms-engine/2.3.1",
+              "type": "ruml.node.evaluated",
+              "time": "2024-01-15T10:00:03Z",
+              "subject": "1",
+              "data": {
+                "lexId": "1",
+                "status": "true"
+              }
+            },
+            {
+              "specversion": "1.0",
+              "id": "0005",
+              "source": "https://engines.example.com/rms-engine/2.3.1",
+              "type": "ruml.evaluation.completed",
+              "time": "2024-01-15T10:00:05Z"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

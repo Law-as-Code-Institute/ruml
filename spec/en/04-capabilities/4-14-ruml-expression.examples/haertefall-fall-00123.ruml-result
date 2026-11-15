@@ -1,0 +1,80 @@
+{
+  "$format": "RUML-Result",
+  "$specVersion": "1.0",
+  "rumlReference": {
+    "id": "b6620b3c-4279-4a45-9115-c8bb2032d868"
+  },
+  "evaluation": {
+    "id": "7f3d1c88-2b4e-4a19-9c5d-0e6f1a2b3c4d",
+    "timestamp": "2024-01-15T10:00:00Z",
+    "mode": "complete",
+    "caseId": "Antrag-2024-00123",
+    "capabilities": [
+      {
+        "id": "ruml:datapoints"
+      },
+      {
+        "id": "ruml:query"
+      },
+      {
+        "id": "ruml:expression"
+      }
+    ],
+    "results": {
+      "1": {
+        "lexId": "1",
+        "status": "true",
+        "reason": "AND: alle Kinder true"
+      },
+      "1.1": {
+        "lexId": "2",
+        "status": "true",
+        "reason": "2 von 3 Merkmalen erfüllt (Schwelle: 2)",
+        "capabilities": [
+          {
+            "id": "ruml:expression",
+            "payload": {
+              "expression": "$count($children[status = \"true\"]) >= 2",
+              "inputs": {},
+              "children": [
+                {
+                  "lexId": "3",
+                  "status": "true"
+                },
+                {
+                  "lexId": "4",
+                  "status": "false"
+                },
+                {
+                  "lexId": "5",
+                  "status": "true"
+                }
+              ],
+              "result": "true"
+            }
+          }
+        ]
+      },
+      "1.1.1": {
+        "lexId": "3",
+        "status": "true",
+        "reason": "Pflegegrad 4 >= 3"
+      },
+      "1.1.2": {
+        "lexId": "4",
+        "status": "false",
+        "reason": "Eigenanteil 640 EUR <= 800 EUR"
+      },
+      "1.1.3": {
+        "lexId": "5",
+        "status": "true",
+        "reason": "Alleinlebend"
+      },
+      "1.2": {
+        "lexId": "7",
+        "status": "true",
+        "reason": "Wohnsitz im Land"
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "4.11 ruml:context"
+description: "The format of the `hash` of a context entry."
+tests:
+  - name: "hash-algorithms"
+    kind: "validation"
+    spec: ["4.11"]
+    description:
+      "Three context entries have a `hash` with `sha3-256`, `sha256` and `blake3`, each followed by
+      64 lowercase hexadecimal characters."
+    ruml: "4-11-ruml-context.fixtures/accept-hash-algorithms.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "hash-unknown-algorithm"
+    kind: "validation"
+    spec: ["4.11"]
+    description:
+      "A context entry has a `hash` with the algorithm `sha-256`, which is not one of `sha3-256`,
+      `sha256` and `blake3`."
+    ruml: "4-11-ruml-context.fixtures/reject-hash-unknown-algorithm.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CTX-08"]
+    at: ["/capabilities/0/payload/data/ctx_estg_32a/hash"]
+
+  - name: "hash-uppercase-hex"
+    kind: "validation"
+    spec: ["4.11"]
+    description: "A context entry has a `hash` whose hexadecimal characters are uppercase."
+    ruml: "4-11-ruml-context.fixtures/reject-hash-uppercase-hex.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CTX-08"]
+    at: ["/capabilities/0/payload/data/ctx_estg_32a/hash"]
+
+  - name: "hash-wrong-length"
+    kind: "validation"
+    spec: ["4.11"]
+    description: "A context entry has a `hash` with 40 instead of 64 hexadecimal characters."
+    ruml: "4-11-ruml-context.fixtures/reject-hash-wrong-length.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CTX-08"]
+    at: ["/capabilities/0/payload/data/ctx_estg_32a/hash"]

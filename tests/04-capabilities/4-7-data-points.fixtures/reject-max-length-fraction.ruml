@@ -1,0 +1,41 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:datapoints",
+      "required": true,
+      "payload": {
+        "data": {
+          "dp_postal_code": {
+            "name": "Postleitzahl",
+            "type": "string",
+            "validation": {
+              "minLength": 5,
+              "maxLength": 5.5
+            },
+            "binding": {
+              "type": "input"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "id": "e7f8a9b0-c1d2-4e3f-8a4b-5c6d7e8f9a0b",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "f8a9b0c1-d2e3-4f4a-9b5c-6d7e8f9a0b1c",
+        "label": "Antrag"
+      }
+    }
+  }
+}

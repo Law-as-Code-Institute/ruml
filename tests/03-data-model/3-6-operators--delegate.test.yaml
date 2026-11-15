@@ -1,0 +1,174 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "3.6 Operators (DELEGATED validation)"
+description: "The DELEGATED operator, its binding to a combiner capability, and custom combiners."
+tests:
+  - name: "delegated--accepts-operator-with-official-combiner"
+    kind: "validation"
+    spec: ["3.6"]
+    description:
+      'A parent node with `operator: "DELEGATED"`, children and one `ruml:expression` entry is
+      valid.'
+    ruml: "3-6-operators.fixtures/accept-delegated-operator.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "delegated--accepts-custom-combiner"
+    kind: "validation"
+    spec: ["3.6", "4.1"]
+    description:
+      'A third-party capability declared at root with `role: "combiner"` may combine a node''s
+      children.'
+    ruml: "3-6-operators.fixtures/accept-delegated-custom-combiner.ruml"
+    layer: "semantic"
+    expect: "accept"
+
+  - name: "delegated--accepts-nondeterministic-expression"
+    kind: "validation"
+    spec: ["3.6", "4.14"]
+    description:
+      "A combiner expression MAY use non-deterministic JSONata functions such as `$random`."
+    ruml: "3-6-operators.fixtures/accept-delegated-nondeterministic-expression.ruml"
+    layer: "semantic"
+    expect: "accept"
+
+  - name: "delegated--rejects-operator-without-capability"
+    kind: "validation"
+    spec: ["3.6"]
+    description:
+      '`operator: "DELEGATED"` without any capability entry leaves the node with no combination
+      rule.'
+    ruml: "3-6-operators.fixtures/reject-delegated-operator-without-capability.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["OP-02"]
+    at: ["/rulemap/nodes/1"]
+
+  - name: "delegated--rejects-combiner-without-combiner-role"
+    kind: "validation"
+    spec: ["3.6", "4.1"]
+    description: "A third-party capability declared with the `data` role cannot combine children."
+    ruml: "3-6-operators.fixtures/reject-delegated-combiner-without-combiner-role.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["OP-02"]
+    at: ["/capabilities/0", "/rulemap/nodes/1"]
+
+  - name: "delegated--rejects-leaf-decider-as-combiner"
+    kind: "validation"
+    spec: ["3.6", "4.1"]
+    description:
+      'A capability declared `role: "decision"` decides a leaf; it does not consume child results
+      and MUST NOT combine them.'
+    ruml: "3-6-operators.fixtures/reject-delegated-leaf-decider-as-combiner.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["OP-02"]
+    at: ["/rulemap/nodes/1"]
+
+  - name: "delegated--rejects-two-combiners"
+    kind: "validation"
+    spec: ["3.6", "4.1"]
+    description:
+      "A node carries `ruml:expression` and a third-party combiner side by side; a node carries at
+      most one combiner, even when the two have different ids."
+    ruml: "3-6-operators.fixtures/reject-delegated-two-combiners.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["OP-02"]
+    at: ["/rulemap/nodes/1/capabilities/1"]
+
+  - name: "delegated--rejects-combiner-without-operator"
+    kind: "validation"
+    spec: ["3.6"]
+    description:
+      "A `ruml:expression` entry on a node whose operator is `AND` states two different combination
+      rules."
+    ruml: "3-6-operators.fixtures/reject-delegated-combiner-without-operator.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-08"]
+    at: ["/rulemap/nodes/1/operator"]
+
+  - name: "delegated--rejects-custom-combiner-on-logical-parent"
+    kind: "validation"
+    spec: ["3.6", "4.1"]
+    description:
+      "A combiner sits on a node if and only if its operator is `DELEGATED`; a declared combiner
+      under `AND` is invalid."
+    ruml: "3-6-operators.fixtures/reject-delegated-custom-combiner-on-logical-parent.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["CAP-08"]
+    at: ["/rulemap/nodes/1"]
+
+  - name: "delegated--rejects-custom-combiner-on-leaf"
+    kind: "validation"
+    spec: ["3.6", "4.1"]
+    description:
+      "A combiner decides a node from its children, so a declared combiner on a leaf is invalid."
+    ruml: "3-6-operators.fixtures/reject-delegated-custom-combiner-on-leaf.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["CAP-08"]
+    at: ["/rulemap/nodes/1"]
+
+  - name: "delegated--rejects-operator-on-leaf"
+    kind: "validation"
+    spec: ["3.6"]
+    description:
+      "`DELEGATED` combines children, so outside a draft a node using it without a `children` array
+      is invalid; a leaf node there has no operator at all."
+    ruml: "3-6-operators.fixtures/reject-delegated-operator-on-leaf.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["NODE-07", "OP-02"]
+    at: ["/rulemap/nodes/1"]
+
+  - name: "delegated--accepts-operator-on-leaf-in-draft"
+    kind: "validation"
+    spec: ["3.6"]
+    description:
+      'In a draft, a leaf node may have `operator: "DELEGATED"` without a combiner; the operator is
+      ignored like any operator on a leaf.'
+    ruml: "3-6-operators.fixtures/accept-delegated-operator-on-leaf-in-draft.ruml"
+    layer: "schema"
+    expect: "accept"
+    rules: ["NODE-07"]
+    at: ["/rulemap/nodes/2/operator"]
+
+  - name: "delegated--rejects-missing-description"
+    kind: "validation"
+    spec: ["3.6", "4.14"]
+    description:
+      "`description` is required on a combiner: the operator name no longer says what the node does."
+    ruml: "3-6-operators.fixtures/reject-delegated-combiner-without-description.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["OP-04"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload"]
+
+  - name: "delegated--rejects-expression-not-required"
+    kind: "validation"
+    spec: ["4.14"]
+    description:
+      "`ruml:expression` declared with `required: false` would let a tool that cannot combine the
+      children evaluate the file anyway."
+    ruml: "3-6-operators.fixtures/reject-delegated-expression-not-required.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-11"]
+    at: ["/capabilities/0/required"]
+
+  - name: "delegated--rejects-expression-required-omitted"
+    kind: "validation"
+    spec: ["4.14"]
+    description:
+      "A root declaration of `ruml:expression` without `required` is invalid: a tool that does not
+      know the capability would read it as `required: false`."
+    ruml: "3-6-operators.fixtures/reject-delegated-expression-required-omitted.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-11"]
+    at: ["/capabilities/0"]

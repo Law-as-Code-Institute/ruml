@@ -1,0 +1,27 @@
+{
+  "name": "@law-as-code-institute/ruml-schema",
+  "version": "1.0.0",
+  "description": "RUML JSON Schemas — the machine-readable structural layer of the RUML specification",
+  "keywords": [
+    "json-schema",
+    "law-as-code",
+    "legal",
+    "rulemapping",
+    "ruml"
+  ],
+  "homepage": "https://ruml.org",
+  "bugs": "https://github.com/Law-as-Code-Institute/ruml/issues",
+  "license": "Apache-2.0",
+  "author": "Rulemapping Group GmbH",
+  "files": [
+    "ruml.schema.json",
+    "ruml-result.schema.json",
+    "ruml-ext.schema.json"
+  ],
+  "exports": {
+    ".": "./ruml.schema.json",
+    "./result": "./ruml-result.schema.json",
+    "./ext": "./ruml-ext.schema.json",
+    "./package.json": "./package.json"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:text-reference",
+      "payload": {
+        "data": {
+          "text_main": {
+            "title": "Einkommensteuergesetz",
+            "uri": "/akn/de/act/2024-01-01/estg",
+            "timestamp": "2026-10-09T00:00:00Z",
+            "digest": "sha3-256:76d99de78df2c37611134daf1a8b9110af6a3da8918b206be675afda0261c2b6",
+            "content": {
+              "type": "akomaNtoso",
+              "content": []
+            }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "id": "ec36948d-fbb2-4815-985a-bd5e9375d934",
+    "version": "2024-01-01",
+    "created": "2026-10-09T00:00:00Z",
+    "modified": "2026-10-09T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z",
+    "documentType": "law"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "0eb360a6-626a-406d-89a1-9f434ced141b",
+        "label": "Steuerpflicht"
+      }
+    }
+  }
+}

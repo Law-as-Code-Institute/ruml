@@ -1,0 +1,31 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "metadata": {
+    "id": "4764f53d-adb4-4388-b5d3-bc20e47ba522",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "64c38eaf-41e8-44a5-bf5d-91ff2ce812e7",
+        "operator": "AND",
+        "label": "Application",
+        "children": ["2", "3"]
+      },
+      "2": {
+        "id": "96754bd4-3ef6-42f6-9c6a-d687631f294e",
+        "operator": "AND",
+        "label": "Applicant is of age"
+      },
+      "3": {
+        "id": "41e1fda4-0976-4837-a11a-ad9044cf786d",
+        "label": "Signature is present"
+      }
+    }
+  }
+}

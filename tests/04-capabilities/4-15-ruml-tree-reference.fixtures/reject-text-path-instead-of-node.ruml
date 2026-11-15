@@ -1,0 +1,35 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:tree-reference"
+    }
+  ],
+  "metadata": {
+    "id": "7d2e4f61-8a3b-4c5d-9e0f-1a2b3c4d5e6f",
+    "version": "1.0.0",
+    "created": "2026-10-19T00:00:00Z",
+    "modified": "2026-10-19T00:00:00Z",
+    "status": "draft",
+    "title": "GmbH-Gründung prüfen"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "2f8c6a1e-5b3d-4e7f-9a0c-6d1b2e3f4a5b",
+        "label": "Gesellschaftsvertrag formgültig",
+        "capabilities": [
+          {
+            "id": "ruml:tree-reference",
+            "payload": {
+              "represents": {
+                "uri": "https://rulemapping.org/rulemapping/gmbhg:2025-01-01#ruml:text-reference/text_main/4c1f0a52-8f7e-4b4a-9d0e-2a6b3c8e1f10"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

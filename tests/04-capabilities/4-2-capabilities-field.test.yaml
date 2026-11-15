@@ -1,0 +1,61 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "4.2 Capability Declaration"
+description:
+  "The `role` declaration of non-official capabilities at root, node capabilities without a root
+  declaration, and duplicate ids at root."
+tests:
+  - name: "custom-capability-with-role"
+    kind: "validation"
+    spec: ["4.2", "4.1"]
+    description: "A third-party capability declares the role the rulemap expects."
+    ruml: "4-2-capabilities-field.fixtures/accept-custom-capability-with-role.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "custom-capability-without-role"
+    kind: "validation"
+    spec: ["4.2", "4.1"]
+    description:
+      "A third-party capability has no role in this specification, so its root entry MUST declare
+      one."
+    ruml: "4-2-capabilities-field.fixtures/reject-custom-capability-without-role.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-03"]
+    at: ["/capabilities/0"]
+
+  - name: "empty-node-capabilities-without-root"
+    kind: "validation"
+    spec: ["4.2"]
+    description:
+      "The file declares no capabilities, and node `1` carries an empty `capabilities` array; the
+      field MUST be absent on all nodes."
+    ruml: "4-2-capabilities-field.fixtures/reject-empty-node-capabilities-without-root.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-14"]
+    at: ["/rulemap/nodes/1/capabilities"]
+
+  - name: "duplicate-official-capability"
+    kind: "validation"
+    spec: ["4.2"]
+    description: "`ruml:expression` is declared twice in the root `capabilities` array."
+    ruml: "4-2-capabilities-field.fixtures/reject-duplicate-official-capability.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-10"]
+    at: ["/capabilities"]
+
+  - name: "duplicate-custom-capability"
+    kind: "validation"
+    spec: ["4.2"]
+    description:
+      "A third-party capability is declared twice in the root `capabilities` array. The schema
+      cannot detect this for third-party ids, so the parser MUST reject it."
+    ruml: "4-2-capabilities-field.fixtures/reject-duplicate-custom-capability.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["CAP-10"]
+    at: ["/capabilities/1"]

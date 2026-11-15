@@ -1,0 +1,83 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "2.2 File Structure Overview"
+description: "The root object: discriminators, required fields, node keys."
+tests:
+  - name: "minimal-file-is-valid"
+    kind: "validation"
+    spec: ["2.2"]
+    description: "The minimal valid file the spec prints in §2.2."
+    ruml: "2-2-file-structure.fixtures/accept-minimal-file-is-valid.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "wrong-format-discriminator"
+    kind: "validation"
+    spec: ["2.2"]
+    description: '`$format` is `"RMLX"` instead of the required `"RUML"`.'
+    ruml: "2-2-file-structure.fixtures/reject-wrong-format-discriminator.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["FMT-03"]
+    at: ["/$format"]
+
+  - name: "unsupported-spec-version"
+    kind: "validation"
+    spec: ["2.2"]
+    description: '`$specVersion` is `"0.2"`, which is not a supported version.'
+    ruml: "2-2-file-structure.fixtures/reject-unsupported-spec-version.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["FMT-04"]
+    at: ["/$specVersion"]
+
+  - name: "missing-metadata"
+    kind: "validation"
+    spec: ["2.2"]
+    description: "The root `metadata` object is missing entirely."
+    ruml: "2-2-file-structure.fixtures/reject-missing-metadata.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["FMT-06"]
+    at: [""]
+
+  - name: "missing-rulemap"
+    kind: "validation"
+    spec: ["2.2"]
+    description: "The root `rulemap` object is missing entirely."
+    ruml: "2-2-file-structure.fixtures/reject-missing-rulemap.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["FMT-06"]
+    at: [""]
+
+  - name: "unknown-root-field"
+    kind: "validation"
+    spec: ["2.2"]
+    description: "An unknown root field `rulemapp` (a typo of `rulemap`) is present."
+    ruml: "2-2-file-structure.fixtures/reject-unknown-root-field.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["FMT-07"]
+    at: ["/rulemapp"]
+
+  - name: "no-root-node"
+    kind: "validation"
+    spec: ["2.2", "2.6"]
+    description: '`rulemap.nodes` has no entry with key `"1"`, so there is no root node.'
+    ruml: "2-2-file-structure.fixtures/reject-no-root-node.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["FMT-08"]
+    at: ["/rulemap/nodes"]
+
+  - name: "node-without-uuid"
+    kind: "validation"
+    spec: ["2.2", "3.5.2"]
+    description: "The root node has no `id`, but every node MUST have one."
+    ruml: "2-2-file-structure.fixtures/reject-node-without-uuid.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["NODE-01"]
+    at: ["/rulemap/nodes/1"]

@@ -1,0 +1,39 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "6.2 Implementation"
+description: "The definition of a modular node and the `modular` flag it requires."
+tests:
+  - name: "referenced-twice-without-modular"
+    kind: "validation"
+    spec: ["6.2"]
+    description:
+      "Node `5` is a child of both node `2` and node `3`, but does not have `modular: true`."
+    ruml: "6-2-implementation.fixtures/reject-referenced-twice-without-modular.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["MOD-01"]
+    at: ["/rulemap/nodes/5"]
+
+  - name: "referenced-twice-by-one-parent-without-modular"
+    kind: "validation"
+    spec: ["6.2"]
+    description:
+      "Node `1` lists node `2` twice in its `children` array, so node `2` is referenced more than
+      once, but it does not have `modular: true`."
+    ruml: "6-2-implementation.fixtures/reject-referenced-twice-by-one-parent-without-modular.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["MOD-01"]
+    at: ["/rulemap/nodes/2"]
+
+  - name: "modular-with-single-parent"
+    kind: "validation"
+    spec: ["6.2"]
+    description:
+      "Node `5` has `modular: true` but is a child of node `2` only, so it is not modular. A
+      validator reports a warning; the document stays valid."
+    ruml: "6-2-implementation.fixtures/accept-modular-with-single-parent.ruml"
+    layer: "semantic"
+    expect: "accept"
+    at: ["/rulemap/nodes/5/modular"]

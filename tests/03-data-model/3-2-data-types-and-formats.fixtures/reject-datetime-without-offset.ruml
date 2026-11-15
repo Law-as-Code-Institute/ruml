@@ -1,0 +1,19 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "metadata": {
+    "id": "5d1f7a3c-9e2b-4c8d-a6f0-3b7e9c1d2a4f",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "draft"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "8a4c2e6f-1b3d-4f5a-9c7e-0d2b4f6a8c1e",
+        "label": "Application is complete"
+      }
+    }
+  }
+}

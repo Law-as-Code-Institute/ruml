@@ -1,0 +1,34 @@
+{
+  "$format": "RUML-Result",
+  "$specVersion": "1.0",
+  "rumlReference": {
+    "id": "40535935-2b25-4871-a293-211bf5eb31d6"
+  },
+  "evaluation": {
+    "id": "5e2b9c41-7a3f-4d18-b6e0-9c2a4f1d8b73",
+    "timestamp": "2024-01-15T10:00:00Z",
+    "mode": "complete",
+    "results": {
+      "1": {
+        "lexId": "1",
+        "status": "false",
+        "reason": "AND: Kind 1.2 false"
+      },
+      "1.1": {
+        "lexId": "8",
+        "status": "true",
+        "reason": "Bonität ausreichend"
+      },
+      "1.2": {
+        "lexId": "2",
+        "status": "false",
+        "reason": "AND: Kind 1.2.1 false"
+      },
+      "1.2.1": {
+        "lexId": "8",
+        "status": "false",
+        "reason": "Bonität nicht ausreichend"
+      }
+    }
+  }
+}

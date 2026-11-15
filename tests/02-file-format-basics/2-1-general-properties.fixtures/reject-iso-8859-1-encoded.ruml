@@ -1,0 +1,19 @@
+{
+  "$format": "RUML",
+  "$specVersion": "0.1",
+  "metadata": {
+    "id": "7f0c8f7e-4a5b-4c1d-9e2f-3a4b5c6d7e8f",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "draft"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "b2a1d3c4-5e6f-47a8-9b0c-1d2e3f4a5b6c",
+        "label": "Prüfung der Anspruchsvoraussetzungen"
+      }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "$format": "RUML-Result",
+  "$specVersion": "1.0",
+  "rumlReference": {
+    "id": "7e2e168a-77b2-455c-b932-f67ae9633855"
+  },
+  "evaluation": {
+    "id": "8b4b0a25-5ca8-4262-b7fc-841e0e13eeae",
+    "timestamp": "2024-01-15T10:00:05Z",
+    "mode": "optimized",
+    "results": {
+      "1.2": {
+        "lexId": "3",
+        "status": "true",
+        "evaluatedAt": "2024-01-15T10:00:04Z",
+        "reason": "3 von 5 Merkmalen erfüllt (Schwelle: 3)",
+        "capabilities": [
+          {
+            "id": "ruml:expression",
+            "payload": {
+              "expression": "$count($children[status = 'true']) >= 3",
+              "inputs": {},
+              "children": [
+                {
+                  "lexId": "4",
+                  "status": "true"
+                },
+                {
+                  "lexId": "5",
+                  "status": "false"
+                },
+                {
+                  "lexId": "6",
+                  "status": "true"
+                },
+                {
+                  "lexId": "7",
+                  "status": "true"
+                },
+                {
+                  "lexId": "8",
+                  "status": "false"
+                }
+              ],
+              "result": "true"
+            }
+          }
+        ]
+      },
+      "1.3": {
+        "lexId": "9",
+        "status": "true",
+        "reason": "Fiktion: Antragsteller ist 67 Jahre alt",
+        "capabilities": [
+          {
+            "id": "ruml:expression",
+            "payload": {
+              "expression": "dp_alter >= 65 or $count($children[status = 'true']) = 3",
+              "inputs": {
+                "dp_alter": 67
+              },
+              "children": [
+                {
+                  "lexId": "10",
+                  "status": "true"
+                },
+                {
+                  "lexId": "11",
+                  "status": "false"
+                },
+                {
+                  "lexId": "12",
+                  "status": "false"
+                }
+              ],
+              "result": "true"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

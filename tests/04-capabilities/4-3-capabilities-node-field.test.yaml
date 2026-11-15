@@ -1,0 +1,73 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "4.3 Capability Data on Nodes"
+description:
+  "What a node's capability entries must contain, and which ids a node may carry or repeat."
+tests:
+  - name: "repeated-decision-id"
+    kind: "validation"
+    spec: ["4.3", "4.1"]
+    description:
+      "A leaf node carries `ruml:query` twice with different expressions; a `decision` capability
+      may repeat, and `decisionMode` combines the results."
+    ruml: "4-3-capabilities-node-field.fixtures/accept-repeated-decision-id.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "repeated-official-data-id"
+    kind: "validation"
+    spec: ["4.3", "4.1"]
+    description: "A node carries `ruml:context` twice; a `data` capability appears at most once."
+    ruml: "4-3-capabilities-node-field.fixtures/reject-repeated-official-data-id.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-06"]
+    at: ["/rulemap/nodes/1/capabilities"]
+
+  - name: "repeated-custom-data-id"
+    kind: "validation"
+    spec: ["4.3", "4.1"]
+    description:
+      "A node carries a third-party capability twice whose root declaration states the `data` role;
+      it appears at most once."
+    ruml: "4-3-capabilities-node-field.fixtures/reject-repeated-custom-data-id.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["CAP-06"]
+    at: ["/rulemap/nodes/1/capabilities/2"]
+
+  - name: "undeclared-capability"
+    kind: "validation"
+    spec: ["4.3"]
+    description:
+      "The root `capabilities` array declares `org.ruml.test/data`, but node `1` carries
+      `org.ruml.test/decision`, which it does not declare."
+    ruml: "4-3-capabilities-node-field.fixtures/reject-undeclared-capability.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["CAP-15"]
+    at: ["/rulemap/nodes/1/capabilities/0"]
+
+  - name: "entry-without-payload"
+    kind: "validation"
+    spec: ["4.3", "3.5.3"]
+    description:
+      "Node `1` carries a `ruml:query` entry with `id` only; every node entry contains `payload`."
+    ruml: "4-3-capabilities-node-field.fixtures/reject-entry-without-payload.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-17"]
+    at: ["/rulemap/nodes/1/capabilities/0"]
+
+  - name: "protocol-on-node"
+    kind: "validation"
+    spec: ["4.3", "4.13"]
+    description:
+      "Node `1` carries a `ruml:protocol` entry; the capability has no node-level data and is
+      declared at root only."
+    ruml: "4-3-capabilities-node-field.fixtures/reject-protocol-on-node.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-18"]
+    at: ["/rulemap/nodes/1/capabilities/0"]

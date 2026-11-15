@@ -1,0 +1,36 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "org.ruml.test/combiner",
+      "required": true,
+      "role": "combiner"
+    }
+  ],
+  "metadata": {
+    "id": "c7a3e9f1-2d58-4b06-9e4a-81f6b0d3a5c2",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "0eb360a6-626a-406d-89a1-9f434ced141b",
+        "label": "Gesamtbewertung",
+        "capabilities": [
+          {
+            "id": "org.ruml.test/combiner",
+            "payload": {
+              "description": "Status des ersten Kindes",
+              "pickChildResult": 1
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "3.3 Metadata Object"
+description: "The metadata object: optional fields and status values."
+tests:
+  - name: "suspended-with-comment"
+    kind: "validation"
+    spec: ["3.3.2", "3.3.3"]
+    description:
+      "A `suspended` file gives the reason for its status in `metadata.comment` instead of
+      `validUntil`."
+    ruml: "3-3-metadata-object.fixtures/accept-suspended-with-comment.ruml"
+    layer: "schema"
+    expect: "accept"

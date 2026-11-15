@@ -1,0 +1,48 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:expression"
+    }
+  ],
+  "metadata": {
+    "id": "463ddf17-49f7-4081-8411-86e791ac2da3",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "568f8ca7-d991-4489-bf87-dad35728e342",
+        "operator": "DELEGATED",
+        "label": "Mindestens zwei Merkmale erfüllt",
+        "children": ["2", "3", "4"],
+        "capabilities": [
+          {
+            "id": "ruml:expression",
+            "payload": {
+              "description": "Mindestens zwei der drei Merkmale müssen erfüllt sein",
+              "expression": "$count($children[status = 'true']) >= 2"
+            }
+          }
+        ]
+      },
+      "2": {
+        "id": "541179cd-6ca6-4093-aa82-42ee1bcdc6f9",
+        "label": "Merkmal 1"
+      },
+      "3": {
+        "id": "58be5626-b0d6-4061-a1f8-89189f223f21",
+        "label": "Merkmal 2"
+      },
+      "4": {
+        "id": "07a85605-336b-4925-afaa-93c4b336171c",
+        "label": "Merkmal 3"
+      }
+    }
+  }
+}

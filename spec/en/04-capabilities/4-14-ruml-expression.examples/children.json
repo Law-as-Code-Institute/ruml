@@ -1,0 +1,29 @@
+{
+  "$children": [
+    {
+      "lexId": "4",
+      "label": "Merkmal 1",
+      "status": "true"
+    },
+    {
+      "lexId": "5",
+      "label": "Merkmal 2",
+      "status": "false"
+    },
+    {
+      "lexId": "6",
+      "label": "Merkmal 3",
+      "status": "true"
+    },
+    {
+      "lexId": "7",
+      "label": "Merkmal 4",
+      "status": "true"
+    },
+    {
+      "lexId": "8",
+      "label": "Merkmal 5",
+      "status": "false"
+    }
+  ]
+}

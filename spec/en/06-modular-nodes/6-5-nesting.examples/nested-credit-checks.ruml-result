@@ -1,0 +1,29 @@
+{
+  "$format": "RUML-Result",
+  "$specVersion": "1.0",
+  "rumlReference": {
+    "id": "16c994a6-3944-45b0-a2a9-510dd0e5f4ef"
+  },
+  "evaluation": {
+    "id": "409a78d7-82d0-4169-86e2-66f535e671b5",
+    "timestamp": "2024-01-15T10:00:00Z",
+    "mode": "optimized",
+    "results": {
+      "1.1.2": {
+        "lexId": "20",
+        "status": "true",
+        "reason": "AND: alle Kinder true"
+      },
+      "1.2.1.2": {
+        "lexId": "20",
+        "status": "true",
+        "reason": "AND: alle Kinder true"
+      },
+      "1.3.1": {
+        "lexId": "20",
+        "status": "false",
+        "reason": "AND: Einkommensprüfung false"
+      }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "4.12 ruml:text-reference"
+description: "Text entries with RUML Text content, and local anchors into them."
+tests:
+  - name: "law-text-as-ruml-text"
+    kind: "validation"
+    spec: ["4.12"]
+    description:
+      "A law RUML carries § 1 SGB XII as RUML Text (LegalDocML.de namespace, digest, source); its
+      node represents a sentence of it, named by `id` and the marker's `GUID` as `element`."
+    ruml: "4-12-ruml-text-reference.fixtures/accept-law-text-as-ruml-text.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "own-text-without-uri"
+    kind: "validation"
+    spec: ["4.12"]
+    description:
+      "A draft rulemap carries a text written in the file itself: a UUID-based key, a `title`, no
+      `uri`, and a node representing the whole entry (anchor without `element`)."
+    ruml: "4-12-ruml-text-reference.fixtures/accept-own-text-without-uri.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "text-without-title"
+    kind: "validation"
+    spec: ["4.12"]
+    description: "A text entry has `uri`, `timestamp`, `status` and `text` but no `title`."
+    ruml: "4-12-ruml-text-reference.fixtures/reject-text-without-title.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TXT-04"]
+    at: ["/capabilities/0/payload/data/text_main"]
+
+  - name: "text-and-content"
+    kind: "validation"
+    spec: ["4.12"]
+    description: "A text entry carries both plain `text` and RUML Text `content`."
+    ruml: "4-12-ruml-text-reference.fixtures/reject-text-and-content.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TXT-07"]
+    at: ["/capabilities/0/payload/data/text_main"]
+
+  - name: "content-without-digest"
+    kind: "validation"
+    spec: ["4.12"]
+    description: "A text entry has `content` but no `digest`."
+    ruml: "4-12-ruml-text-reference.fixtures/reject-content-without-digest.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TXT-08"]
+    at: ["/capabilities/0/payload/data/text_main"]
+
+  - name: "content-without-namespace"
+    kind: "validation"
+    spec: ["4.12"]
+    description:
+      "The root of a text's `content` declares no namespace, so it names no Akoma Ntoso dialect."
+    ruml: "4-12-ruml-text-reference.fixtures/reject-content-without-namespace.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TXT-15"]
+    at: ["/capabilities/0/payload/data/text_main/content"]
+
+  - name: "anchor-into-another-ruml"
+    kind: "validation"
+    spec: ["4.12"]
+    description:
+      "An anchor points into a law in another RUML file with an absolute `uri`; anchors are local
+      and have no `uri`."
+    ruml: "4-12-ruml-text-reference.fixtures/reject-anchor-into-another-ruml.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TXT-01"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/refs/0"]
+
+  - name: "anchor-without-type"
+    kind: "validation"
+    spec: ["4.12"]
+    description: "An anchor names a text entry and an element but no `type`."
+    ruml: "4-12-ruml-text-reference.fixtures/reject-anchor-without-type.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TXT-01"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/refs/0"]
+
+  - name: "two-represents-anchors"
+    kind: "validation"
+    spec: ["4.12"]
+    description: "A node marks two different texts as the norm it represents."
+    ruml: "4-12-ruml-text-reference.fixtures/reject-two-represents-anchors.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TXT-01"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/refs"]

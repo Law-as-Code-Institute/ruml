@@ -1,0 +1,70 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../../schema/spec-test.schema.json
+title: "4.16 ruml:tree-include"
+description: "Leaf nodes that evaluate the subtree of a node of another RUML file in their place."
+tests:
+  - name: "include-on-leaf"
+    kind: "validation"
+    spec: ["4.16"]
+    description:
+      "Two leaves of an `AND` node each include one node of a law rulemap; one of them also refers
+      to a further node with `ruml:tree-reference`. A third leaf has its own logic."
+    ruml: "4-16-ruml-tree-include.fixtures/accept-include-on-leaf.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "root-payload"
+    kind: "validation"
+    spec: ["4.16"]
+    description: "The root-level declaration of `ruml:tree-include` has a payload."
+    ruml: "4-16-ruml-tree-include.fixtures/reject-root-payload.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-01"]
+    at: ["/capabilities/0"]
+
+  - name: "include-without-uri"
+    kind: "validation"
+    spec: ["4.16"]
+    description: "A node has `ruml:tree-include` with a payload without `uri`."
+    ruml: "4-16-ruml-tree-include.fixtures/reject-include-without-uri.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-01"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload"]
+
+  - name: "include-same-document"
+    kind: "validation"
+    spec: ["4.16"]
+    description:
+      "An inclusion uses a same-document `uri` (`#node/…`); reuse within one file is what modular
+      nodes are for."
+    ruml: "4-16-ruml-tree-include.fixtures/reject-include-same-document.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-02"]
+    at: ["/rulemap/nodes/1/capabilities/0/payload/uri"]
+
+  - name: "including-node-with-children"
+    kind: "validation"
+    spec: ["4.1", "4.16"]
+    description:
+      "A node with `ruml:tree-include` also has a child of its own; an including node is a leaf."
+    ruml: "4-16-ruml-tree-include.fixtures/reject-including-node-with-children.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["CAP-07"]
+    at: ["/rulemap/nodes/2/children"]
+
+  - name: "represents-and-include"
+    kind: "validation"
+    spec: ["4.16"]
+    description:
+      "A node includes a node of a law rulemap and also represents it with `ruml:tree-reference`; an
+      including node already stands for the node it includes."
+    ruml: "4-16-ruml-tree-include.fixtures/reject-represents-and-include.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["TREE-08"]
+    at: ["/rulemap/nodes/1/capabilities"]

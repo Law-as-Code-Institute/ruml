@@ -1,0 +1,45 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:tree-include"
+    }
+  ],
+  "metadata": {
+    "id": "7d2e4f61-8a3b-4c5d-9e0f-1a2b3c4d5e6f",
+    "version": "1.0.0",
+    "created": "2026-10-19T00:00:00Z",
+    "modified": "2026-10-19T00:00:00Z",
+    "status": "draft",
+    "title": "GmbH-Gründung prüfen"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "2f8c6a1e-5b3d-4e7f-9a0c-6d1b2e3f4a5b",
+        "operator": "AND",
+        "label": "Gesellschaft wirksam gegründet",
+        "children": ["2"]
+      },
+      "2": {
+        "id": "3a9d7b2f-6c4e-4f80-8b1d-7e2c3f4a5b6c",
+        "operator": "AND",
+        "label": "Gesellschaftsvertrag notariell beurkundet",
+        "children": ["3"],
+        "capabilities": [
+          {
+            "id": "ruml:tree-include",
+            "payload": {
+              "uri": "https://rulemapping.org/rulemapping/gmbhg:2025-01-01#node/6e51c5a6-f7ff-43e1-b211-c70bd69937d7"
+            }
+          }
+        ]
+      },
+      "3": {
+        "id": "4b0e8c3a-7d5f-4a91-9c2e-8f3d4a5b6c7d",
+        "label": "Alle Gesellschafter haben unterzeichnet"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "metadata": {
+    "id": "3c9a1e2f-7b4d-4f6a-8c1d-5e2f3a4b6c7d",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "draft"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "label": "Root"
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "2.5 Identifier System"
+description: "UUID and LexID formats."
+tests:
+  - name: "lexid-not-a-positive-integer"
+    kind: "validation"
+    spec: ["2.5"]
+    description:
+      'A node is keyed `"0"`, which does not match the required `^[1-9][0-9]*$` LexID pattern.'
+    ruml: "2-5-identifier-system.fixtures/reject-lexid-not-a-positive-integer.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["FMT-11"]
+    at: ["/rulemap/nodes/0"]
+
+  - name: "uppercase-uuid"
+    kind: "validation"
+    spec: ["2.5"]
+    description: "`metadata.id` is upper-case, but the UUID v4 pattern requires lower-case."
+    ruml: "2-5-identifier-system.fixtures/reject-uppercase-uuid.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["FMT-10"]
+    at: ["/metadata/id"]

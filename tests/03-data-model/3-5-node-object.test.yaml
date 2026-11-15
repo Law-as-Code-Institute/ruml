@@ -1,0 +1,52 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "3.5 Node Object"
+description: "Entries of a node's `children` array, and the `operator` of a leaf node."
+tests:
+  - name: "duplicate-child-reference"
+    kind: "validation"
+    spec: ["3.5.3"]
+    description:
+      "Node `1` lists node `2` twice in its `children` array; node `2` is therefore referenced more
+      than once and has `modular: true`. A validator reports a warning; the document stays valid."
+    ruml: "3-5-node-object.fixtures/accept-duplicate-child-reference.ruml"
+    layer: "semantic"
+    expect: "accept"
+    at: ["/rulemap/nodes/1/children/1"]
+
+  - name: "operator--rejects-operator-on-leaf"
+    kind: "validation"
+    spec: ["3.5.1", "3.5.3"]
+    description:
+      "Outside a draft, a leaf node has nothing to combine and MUST NOT have an `operator`; leaf `2`
+      of this `inForce` file has `AND`."
+    ruml: "3-5-node-object.fixtures/reject-operator-on-leaf.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["NODE-07"]
+    at: ["/rulemap/nodes/2/operator"]
+
+  - name: "operator--accepts-operator-on-leaf-in-draft"
+    kind: "validation"
+    spec: ["3.5.1", "3.5.3"]
+    description:
+      "In a draft, a leaf node may have any operator, which an evaluator ignores; leaf `2` has
+      `AND`."
+    ruml: "3-5-node-object.fixtures/accept-operator-on-leaf-in-draft.ruml"
+    layer: "schema"
+    expect: "accept"
+    rules: ["NODE-07"]
+    at: ["/rulemap/nodes/2/operator"]
+
+  - name: "operator--rejects-undefined-operator-on-leaf"
+    kind: "validation"
+    spec: ["3.5.3", "3.6.5"]
+    description:
+      "Outside a draft, `undefined` on a leaf node is rejected twice: a leaf has no operator, and
+      `undefined` occurs only in drafts."
+    ruml: "3-5-node-object.fixtures/reject-undefined-operator-on-leaf.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["NODE-07", "OP-07"]
+    at: ["/rulemap/nodes/2/operator"]

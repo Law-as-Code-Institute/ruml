@@ -1,0 +1,37 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "metadata": {
+    "id": "3f6b2c1e-8d4a-4e5f-9a7b-1c2d3e4f5a6b",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "draft"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "b6620b3c-4279-4a45-9115-c8bb2032d868",
+        "operator": "AND",
+        "label": "Antrag",
+        "children": ["2", "3"]
+      },
+      "2": {
+        "id": "ec36948d-fbb2-4815-985a-bd5e9375d934",
+        "operator": "AND",
+        "label": "Antrag A",
+        "children": ["5"]
+      },
+      "3": {
+        "id": "0eb360a6-626a-406d-89a1-9f434ced141b",
+        "operator": "AND",
+        "label": "Antrag B",
+        "children": ["5"]
+      },
+      "5": {
+        "id": "6840b48d-117f-474e-ae4e-337b8e60537c",
+        "label": "Mehrfach referenziert"
+      }
+    }
+  }
+}

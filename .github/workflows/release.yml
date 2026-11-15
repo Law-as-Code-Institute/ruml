@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+
+      - name: Read the version
+        id: version
+        run: |
+          name=$(jq -r .name packages/npm/package.json)
+          version=$(jq -r .version packages/npm/package.json)
+          case "$version" in *-*) tag=next ;; *) tag=latest ;; esac
+          if npm view "$name@$version" version >/dev/null 2>&1; then published=true; else published=false; fi
+          {
+            echo "version=$version"
+            echo "dist-tag=$tag"
+            echo "npm-published=$published"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Fill the package
+        working-directory: packages/npm
+        run: |
+          cp ../../schemas/*.schema.json ../../schemas/README.md .
+          cp ../../LICENSES/Apache-2.0.txt LICENSE
+          npm pkg set repository.type=git "repository.url=git+https://github.com/${{ github.repository }}.git"
+
+      - name: Publish to the GitHub npm registry
+        if: steps.version.outputs.npm-published == 'false'
+        working-directory: packages/npm
+        run: npm publish --tag "${{ steps.version.outputs.dist-tag }}"
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Build the Python package
+        working-directory: packages/python
+        run: |
+          cp ../../schemas/*.schema.json ../../schemas/README.md .
+          cp ../../LICENSES/Apache-2.0.txt LICENSE
+          uv build --out-dir dist
+
+      - name: Tag and release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="v${{ steps.version.outputs.version }}"
+          case "$tag" in *-*) prerelease=--prerelease ;; *) prerelease= ;; esac
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" --target "$GITHUB_SHA" --title "$tag" $prerelease
+          fi
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/python/dist
+          skip-existing: true

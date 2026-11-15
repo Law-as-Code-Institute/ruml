@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "2.1 General Properties"
+description: "Encoding and well-formedness of the file as a whole."
+tests:
+  - name: "not-utf8-encoded"
+    kind: "validation"
+    spec: ["2.1"]
+    description:
+      "An ISO-8859-1 encoded file (a label containing the byte 0xFC for `ü`) is not UTF-8 and must
+      be rejected."
+    ruml: "2-1-general-properties.fixtures/reject-iso-8859-1-encoded.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["FMT-01"]
+    at: []
+
+  - name: "not-valid-json"
+    kind: "validation"
+    spec: ["2.1", "2.2"]
+    description: "A file that is not JSON at all must be reported, not crash the validator."
+    ruml: "2-1-general-properties.fixtures/reject-not-valid-json.ruml"
+    layer: "semantic"
+    expect: "reject"
+    rules: ["FMT-02"]
+    at: []

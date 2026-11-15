@@ -1,0 +1,37 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:text-reference"
+    }
+  ],
+  "metadata": {
+    "id": "5b0c1d2e-3f40-4a5b-8c6d-7e8f9a0b1c2d",
+    "version": "3.1.0",
+    "created": "2026-10-09T00:00:00Z",
+    "modified": "2026-10-09T00:00:00Z",
+    "status": "draft"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "0eb360a6-626a-406d-89a1-9f434ced141b",
+        "label": "Leistungsberechtigt",
+        "capabilities": [
+          {
+            "id": "ruml:text-reference",
+            "payload": {
+              "refs": [
+                {
+                  "id": "text_main",
+                  "element": "5d8f3c21-7a64-4c0b-8e2f-1a9b6c3d7e02"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

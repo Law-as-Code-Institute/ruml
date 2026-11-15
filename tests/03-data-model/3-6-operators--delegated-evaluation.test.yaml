@@ -1,0 +1,191 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../../schema/spec-test.schema.json
+title: "3.6 Operators (DELEGATED evaluation)"
+description:
+  "DELEGATED aggregation with a `ruml:expression` combiner that is `true` when two or more children
+  are `true`. Leaf statuses come from `ruml:query` over the input datapoints: `yes` is `true`, `no`
+  is `false`, `unknown` is `undefined`."
+tests:
+  - name: "operator-delegated--optimized--yes-yes-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "3 of 3 children are `true`, so the `ruml:expression` combiner (two or more `true`) makes the
+      DELEGATED root `true`. DELEGATED never short-circuits: all children are evaluated."
+    ruml: "3-6-operators.fixtures/evaluation-delegated-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "yes"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "true"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-delegated--optimized--no-no-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "0 of 3 children are `true`, so the `ruml:expression` combiner (two or more `true`) makes the
+      DELEGATED root `false`. DELEGATED never short-circuits: all children are evaluated."
+    ruml: "3-6-operators.fixtures/evaluation-delegated-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "no"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "false"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "false"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "false"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-delegated--optimized--yes-yes-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "2 of 3 children are `true`, so the `ruml:expression` combiner (two or more `true`) makes the
+      DELEGATED root `true`. DELEGATED never short-circuits: all children are evaluated."
+    ruml: "3-6-operators.fixtures/evaluation-delegated-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "yes"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "false"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-delegated--optimized--yes-no-no"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "1 of 3 children are `true`, so the `ruml:expression` combiner (two or more `true`) makes the
+      DELEGATED root `false`. DELEGATED never short-circuits: all children are evaluated."
+    ruml: "3-6-operators.fixtures/evaluation-delegated-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "no"
+      dp_answer_3: "no"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "false"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "false"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "false"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-delegated--optimized--no-yes-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "2 of 3 children are `true`, so the `ruml:expression` combiner (two or more `true`) makes the
+      DELEGATED root `true`. DELEGATED never short-circuits: all children are evaluated."
+    ruml: "3-6-operators.fixtures/evaluation-delegated-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "yes"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "true"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "true"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-delegated--optimized--yes-yes-unknown"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "A child is `undefined`, so the DELEGATED root is `undefined`, although 2 of the others are
+      `true`; the combiner does not run. All children are evaluated."
+    ruml: "3-6-operators.fixtures/evaluation-delegated-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "yes"
+      dp_answer_2: "yes"
+      dp_answer_3: "unknown"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "undefined"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "true"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "true"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "undefined"
+        comment: "Third child ('dp_answer_3')"
+  - name: "operator-delegated--optimized--no-unknown-yes"
+    kind: "evaluation"
+    spec:
+      - "3.6"
+    description:
+      "A child is `undefined`, so the DELEGATED root is `undefined`, although 1 of the others are
+      `true`; the combiner does not run. All children are evaluated."
+    ruml: "3-6-operators.fixtures/evaluation-delegated-three-queried-children.ruml"
+    run:
+      mode: "optimized"
+    inputs:
+      dp_answer_1: "no"
+      dp_answer_2: "unknown"
+      dp_answer_3: "yes"
+    assertions:
+      - query: "evaluation.results.`1`.status"
+        expectedValue: "undefined"
+      - query: "evaluation.results.`1.1`.status"
+        expectedValue: "false"
+        comment: "First child ('dp_answer_1')"
+      - query: "evaluation.results.`1.2`.status"
+        expectedValue: "undefined"
+        comment: "Second child ('dp_answer_2')"
+      - query: "evaluation.results.`1.3`.status"
+        expectedValue: "true"
+        comment: "Third child ('dp_answer_3')"

@@ -1,0 +1,41 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:datapoints",
+      "required": true,
+      "payload": {
+        "data": {
+          "dp_amount": {
+            "name": "Betrag",
+            "type": "number",
+            "validation": {
+              "min": "0",
+              "max": 100000
+            },
+            "binding": {
+              "type": "input"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "id": "2a3b4c5d-6e7f-4a8b-9c0d-1e2f3a4b5c6d",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "e9f8a7b6-c5d4-4e3f-a2b1-c0d9e8f7a6b5",
+        "label": "Antrag"
+      }
+    }
+  }
+}

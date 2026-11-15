@@ -1,0 +1,34 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ruml-schema"
+version = "1.0.0"
+description = "RUML JSON Schemas — the machine-readable structural layer of the RUML specification"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "Apache-2.0"
+keywords = ["ruml"]
+
+[project.urls]
+Homepage = "https://github.com/Law-as-Code-Institute/ruml"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ruml_schema"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"ruml.schema.json" = "ruml_schema/ruml.schema.json"
+"ruml-result.schema.json" = "ruml_schema/ruml-result.schema.json"
+"ruml-ext.schema.json" = "ruml_schema/ruml-ext.schema.json"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "ruml_schema",
+  "ruml.schema.json",
+  "ruml-result.schema.json",
+  "ruml-ext.schema.json",
+  "README.md",
+]

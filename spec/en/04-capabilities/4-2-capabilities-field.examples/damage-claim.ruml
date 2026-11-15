@@ -1,0 +1,93 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:datapoints",
+      "payload": {
+        "data": {
+          "dp_damage": {
+            "name": "Schadenshöhe",
+            "type": "currency",
+            "unit": "EUR",
+            "binding": {
+              "type": "input"
+            }
+          },
+          "dp_causality": {
+            "name": "Kausalität gegeben",
+            "type": "boolean",
+            "binding": {
+              "type": "input"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "ruml:query"
+    },
+    {
+      "id": "com.example/review-notes",
+      "required": true,
+      "role": "data"
+    }
+  ],
+  "metadata": {
+    "id": "ec36948d-fbb2-4815-985a-bd5e9375d934",
+    "version": "1.0.0",
+    "created": "2024-06-01T00:00:00Z",
+    "modified": "2024-06-01T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "0eb360a6-626a-406d-89a1-9f434ced141b",
+        "operator": "AND",
+        "label": "Anspruch auf Schadensersatz",
+        "children": ["2", "3"],
+        "capabilities": [
+          {
+            "id": "com.example/review-notes",
+            "payload": {
+              "status": "reviewed",
+              "reviewer": "rechtsabteilung"
+            }
+          }
+        ]
+      },
+      "2": {
+        "id": "8fc54c7d-7f60-410e-9493-4f1eecfb1af8",
+        "label": "Schaden entstanden",
+        "capabilities": [
+          {
+            "id": "ruml:query",
+            "payload": {
+              "expression": "dp_damage > 0"
+            }
+          },
+          {
+            "id": "com.example/review-notes",
+            "payload": {
+              "status": "pending"
+            }
+          }
+        ]
+      },
+      "3": {
+        "id": "56b5b9db-b791-4fe5-abb0-a05cb0847db6",
+        "label": "Kausalität gegeben",
+        "capabilities": [
+          {
+            "id": "ruml:query",
+            "payload": {
+              "expression": "dp_causality = true"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

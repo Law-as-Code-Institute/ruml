@@ -1,0 +1,41 @@
+{
+  "$format": "RUML",
+  "$specVersion": "1.0",
+  "capabilities": [
+    {
+      "id": "ruml:datapoints",
+      "required": true,
+      "payload": {
+        "data": {
+          "dp_birth_date": {
+            "name": "Geburtsdatum",
+            "type": "date",
+            "validation": {
+              "min": 1900,
+              "max": "2010-12-31"
+            },
+            "binding": {
+              "type": "input"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "id": "d4c3b2a1-0f9e-4d8c-b7a6-5f4e3d2c1b0a",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-01T00:00:00Z",
+    "status": "inForce",
+    "validFrom": "2024-01-01T00:00:00Z"
+  },
+  "rulemap": {
+    "nodes": {
+      "1": {
+        "id": "7b8c9d0e-1f2a-4b3c-8d4e-5f6a7b8c9d0e",
+        "label": "Antrag"
+      }
+    }
+  }
+}

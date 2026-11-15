@@ -1,0 +1,157 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
+# yaml-language-server: $schema=../schema/spec-test.schema.json
+title: "4.7 DataPoints"
+description:
+  "The type of the bounds of a DataPoint: `min` and `max` by data type, `minLength`, `maxLength` and
+  `cardinality`."
+tests:
+  - name: "min-max-by-data-type"
+    kind: "validation"
+    spec: ["4.7.3"]
+    description:
+      "`min` and `max` are numbers for `number` and `count`, and strings for `date`, `datetime` and
+      `duration`."
+    ruml: "4-7-data-points.fixtures/accept-min-max-by-data-type.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "time-bounds-without-offset"
+    kind: "validation"
+    spec: ["4.7.1", "4.7.3"]
+    description:
+      "A `time` datapoint has the bounds `08:00` and `17:30:00`: without seconds and without an
+      offset, like a `time` value."
+    ruml: "4-7-data-points.fixtures/accept-time-bounds-without-offset.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "datetime-bounds-without-offset"
+    kind: "validation"
+    spec: ["4.7.1", "4.7.3"]
+    description:
+      "A `datetime` datapoint has the bounds `2024-01-01T08:00` and `2024-12-31T17:30:00`: without
+      seconds and without an offset, like a `datetime` value."
+    ruml: "4-7-data-points.fixtures/accept-datetime-bounds-without-offset.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "date-min-as-number"
+    kind: "validation"
+    spec: ["4.7.3"]
+    description: "A `date` datapoint has the number `1900` as `min`, not a date string."
+    ruml: "4-7-data-points.fixtures/reject-date-min-as-number.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-14"]
+    at: ["/capabilities/0/payload/data/dp_birth_date/validation/min"]
+
+  - name: "number-min-as-string"
+    kind: "validation"
+    spec: ["4.7.3"]
+    description: 'A `number` datapoint has the string `"0"` as `min`, not a number.'
+    ruml: "4-7-data-points.fixtures/reject-number-min-as-string.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-14"]
+    at: ["/capabilities/0/payload/data/dp_amount/validation/min"]
+
+  - name: "time-min-malformed"
+    kind: "validation"
+    spec: ["4.7.3"]
+    description: "A `time` datapoint has `8:00` as `min`; the hour needs two digits."
+    ruml: "4-7-data-points.fixtures/reject-time-min-malformed.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-14"]
+    at: ["/capabilities/0/payload/data/dp_opening/validation/min"]
+
+  - name: "length-and-cardinality-bounds"
+    kind: "validation"
+    spec: ["4.7", "4.7.3"]
+    description:
+      "`minLength` is `0` and `cardinality.min` is `0`, `cardinality.max` is `1`: the lowest values
+      allowed."
+    ruml: "4-7-data-points.fixtures/accept-length-and-cardinality-bounds.ruml"
+    layer: "schema"
+    expect: "accept"
+
+  - name: "min-length-negative"
+    kind: "validation"
+    spec: ["4.7.3"]
+    description: "`minLength` is `-1`."
+    ruml: "4-7-data-points.fixtures/reject-min-length-negative.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-08"]
+    at: ["/capabilities/0/payload/data/dp_postal_code/validation/minLength"]
+
+  - name: "max-length-fraction"
+    kind: "validation"
+    spec: ["4.7.3"]
+    description: "`maxLength` is `5.5`, not an integer."
+    ruml: "4-7-data-points.fixtures/reject-max-length-fraction.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-08"]
+    at: ["/capabilities/0/payload/data/dp_postal_code/validation/maxLength"]
+
+  - name: "cardinality-max-zero"
+    kind: "validation"
+    spec: ["4.7"]
+    description: "`cardinality.max` is `0`; a repeated object allows at least one instance."
+    ruml: "4-7-data-points.fixtures/reject-cardinality-max-zero.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-08"]
+    at: ["/capabilities/0/payload/data/dp_children/cardinality/max"]
+
+  - name: "ids-without-prefix"
+    kind: "validation"
+    spec: ["4.7", "4.7.4"]
+    description:
+      "DataPoints, a set and its field have ids without a prefix; one id begins with an underscore."
+    ruml: "4-7-data-points.fixtures/accept-ids-without-prefix.ruml"
+    layer: "schema"
+    expect: "accept"
+    rules: ["DP-02"]
+
+  - name: "set-id-with-space"
+    kind: "validation"
+    spec: ["4.7.4"]
+    description: "A set has an id that contains a space."
+    ruml: "4-7-data-points.fixtures/reject-set-id-with-space.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-02"]
+    at: ["/capabilities/0/payload/sets/child type"]
+
+  - name: "field-id-with-space"
+    kind: "validation"
+    spec: ["4.7.4"]
+    description: "A field of a set has an id that contains a space."
+    ruml: "4-7-data-points.fixtures/reject-field-id-with-space.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-02"]
+    at: ["/capabilities/0/payload/sets/set_child/fields/first name"]
+
+  - name: "datapoint-id-with-capital"
+    kind: "validation"
+    spec: ["4.7"]
+    description: "A DataPoint has an id that contains capital letters."
+    ruml: "4-7-data-points.fixtures/reject-datapoint-id-with-capital.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-02"]
+    at: ["/capabilities/0/payload/data/dp_PostalCode"]
+
+  - name: "datapoint-id-starting-with-digit"
+    kind: "validation"
+    spec: ["4.7"]
+    description: "A DataPoint has an id that begins with a digit."
+    ruml: "4-7-data-points.fixtures/reject-datapoint-id-starting-with-digit.ruml"
+    layer: "schema"
+    expect: "reject"
+    rules: ["DP-02"]
+    at: ["/capabilities/0/payload/data/1st_postal_code"]
