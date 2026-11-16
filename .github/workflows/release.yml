@@ -7,11 +7,7 @@ on:
 
 permissions:
   contents: write
-  packages: write
   id-token: write
-
-env:
-  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   release:
@@ -23,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          registry-url: https://npm.pkg.github.com
+          registry-url: https://registry.npmjs.org
 
       - name: Read the version
         id: version
@@ -45,10 +41,12 @@ jobs:
           cp ../../LICENSES/Apache-2.0.txt LICENSE
           npm pkg set repository.type=git "repository.url=git+https://github.com/${{ github.repository }}.git"
 
-      - name: Publish to the GitHub npm registry
+      - name: Publish to npm
         if: steps.version.outputs.npm-published == 'false'
         working-directory: packages/npm
-        run: npm publish --tag "${{ steps.version.outputs.dist-tag }}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public --tag "${{ steps.version.outputs.dist-tag }}"
 
       - uses: astral-sh/setup-uv@v6
 

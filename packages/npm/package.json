@@ -1,5 +1,5 @@
 {
-  "name": "@law-as-code-institute/ruml-schema",
+  "name": "@law-as-code/ruml-schema",
   "version": "1.0.0",
   "description": "RUML JSON Schemas — the machine-readable structural layer of the RUML specification",
   "keywords": [

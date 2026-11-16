@@ -39,22 +39,16 @@ from ruml_schema import load_ruml_schema, load_ruml_result_schema, load_ruml_ext
 schema = load_ruml_schema()
 ```
 
-**JavaScript and TypeScript**, from the GitHub npm registry. That registry asks for a token
-with the `read:packages` scope even for public packages, so `.npmrc` needs two lines:
-
-```ini
-@law-as-code-institute:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
-```
+**JavaScript and TypeScript**, from npm:
 
 ```sh
-npm install @law-as-code-institute/ruml-schema
+npm install @law-as-code/ruml-schema
 ```
 
 ```js
-import schema from "@law-as-code-institute/ruml-schema" with { type: "json" };
-import resultSchema from "@law-as-code-institute/ruml-schema/result" with { type: "json" };
-import extSchema from "@law-as-code-institute/ruml-schema/ext" with { type: "json" };
+import schema from "@law-as-code/ruml-schema" with { type: "json" };
+import resultSchema from "@law-as-code/ruml-schema/result" with { type: "json" };
+import extSchema from "@law-as-code/ruml-schema/ext" with { type: "json" };
 ```
 
 ## Testing an implementation
